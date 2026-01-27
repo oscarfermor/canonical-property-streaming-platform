@@ -1,7 +1,4 @@
 
-
-
-
 ## Set up
 ### 1. Docker
 Create kafka container
@@ -39,6 +36,7 @@ property_events
 
 ### Python
 ```python
+cd producer
 source venv/bin/activate
 which pip
 pip install -r requeriments.txt
@@ -88,3 +86,69 @@ Check actual messages in JSON format (if available)
   --from-beginning \
   --property schema.registry.url=http://schema-registry:8081
 ```
+
+### Flink
+Flink URL: http://localhost:8082
+
+Check Flink and Kafka connectivity
+```bash
+docker exec -it flink-jobmanager bash
+getent hosts kafka
+getent hosts schema-registry
+```
+Expected output
+```bash
+172.19.0.3      kafka
+172.19.0.4      schema-registry
+```
+
+Compile Flink code
+```bash
+cd flink-consumer
+mvn clean package -U
+```
+Expected output
+```
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  13.898 s
+[INFO] Finished at: 2026-01-27T15:16:48-06:00
+[INFO] ------------------------------------------------------------------------
+```
+Expected Files
+```
+target/
+├── classes/
+│   └── com/example/flink/PropertyEventConsumer.class
+└── property-flink-consumer-1.0-SNAPSHOT.jar
+
+```
+
+Now copy .jar file to Flink container
+```bash
+docker exec -it flink-jobmanager \
+mkdir -p /opt/flink/jobs/  \
+
+docker cp ./target/property-flink-consumer-1.0-SNAPSHOT.jar flink-jobmanager:/opt/flink/jobs/
+````
+Run the Flink job
+```bash
+docker exec -it flink-jobmanager \
+  flink run /opt/flink/jobs/property-flink-consumer-1.0-SNAPSHOT.jar
+```
+Expected output
+```bash
+Job has been submitted with JobID a522df5b5c31d471b8ae6d64529dae3f
+```
+Check actually messages are being processed by the Flink Task Manager
+```bash
+docker logs flink-taskmanager
+```
+Expected output
+```bash
+{"event_id": "d9812664-60f1-4478-89d9-949b1730ea70", "event_type": "LISTING_UPDATED", "source_system": "MLS_MOCK", "event_time": 1769552783160, "payload": {"property_id": "property_12", "price": 170000.0, "status": "ACTIVE"}}
+{"event_id": "348c4b2a-e006-4c4e-917e-02d1f1031e16", "event_type": "LISTING_UPDATED", "source_system": "MLS_MOCK", "event_time": 1769552783160, "payload": {"property_id": "property_13", "price": 180000.0, "status": "ACTIVE"}}
+{"event_id": "bfe327c4-30c1-4848-8a6b-f27c77e8aa81", "event_type": "LISTING_UPDATED", "source_system": "MLS_MOCK", "event_time": 1769552783160, "payload": {"property_id": "property_14", "price": 190000.0, "status": "ACTIVE"}}
+```
+

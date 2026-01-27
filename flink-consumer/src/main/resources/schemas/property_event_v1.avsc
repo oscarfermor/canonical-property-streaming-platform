@@ -1,0 +1,28 @@
+{
+	"type": "record",
+	"name": "PropertyEvent",
+	"namespace": "com.example.events",
+	"fields": [
+		{ "name": "event_id", "type": "string" },
+		{ "name": "event_type", "type": "string" },
+		{ "name": "source_system", "type": "string" },
+		{ "name": "event_time", "type": "long" },
+
+		{
+			"name": "payload",
+			"type": [
+				"null",
+				{
+					"type": "record",
+					"name": "PropertyPayload",
+					"fields": [
+						{ "name": "property_id", "type": "string" },
+						{ "name": "price", "type": ["null", "double"], "default": null },
+						{ "name": "status", "type": ["null", "string"], "default": null }
+					]
+				}
+			],
+			"default": null
+		}
+	]
+}
