@@ -1,4 +1,3 @@
-// Optional fields, backward compatibility, no over-modeling
 {
 	"type": "record",
 	"name": "PropertyEvent",
