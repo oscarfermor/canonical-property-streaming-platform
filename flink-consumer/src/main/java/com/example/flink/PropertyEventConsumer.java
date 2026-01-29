@@ -8,6 +8,9 @@ import org.apache.flink.connector.kafka.source.enumerator.initializer.OffsetsIni
 import org.apache.flink.formats.avro.registry.confluent.ConfluentRegistryAvroDeserializationSchema;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
+import com.example.flink.functions.PropertyEventRoutingFunction;
+import com.example.flink.functions.PropertyEventValidationFunction;
+
 import java.io.InputStream;
 
 public class PropertyEventConsumer {
@@ -53,7 +56,13 @@ public class PropertyEventConsumer {
                         WatermarkStrategy.noWatermarks(),
                         "property-events-source"
                 )
-                .print();
+                .process(
+                        new PropertyEventValidationFunction()
+                )
+                .process(
+                        new PropertyEventRoutingFunction()
+                )
+                .print("VALID!");
 
         // Execute job
         env.execute("Property Events Consumer");
