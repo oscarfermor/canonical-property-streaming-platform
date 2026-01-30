@@ -240,6 +240,14 @@ docker logs flink-taskmanager
 # All containers
 docker compose logs -f
 ```
+Expected output
+```bash
+VALID> PropertyEvent{eventId='33875527-d194-4425-8e24-8976b207d196', eventType='LISTING_UPDATED', sourceSystem='MLS_MOCK', eventTime=1769725516379, payload=PropertyPayload{propertyId='property_4', price=90000.0, status='ACTIVE'}}
+VALID> PropertyEvent{eventId='0a3b9525-da04-4f48-9dc8-ae9c1c20a341', eventType='LISTING_UPDATED', sourceSystem='MLS_MOCK', eventTime=1769725516379, payload=PropertyPayload{propertyId='property_1', price=60000.0, status='ACTIVE'}}
+VALID> PropertyEvent{eventId='a8752000-5373-447c-995e-bb57ab03e73c', eventType='LISTING_UPDATED', sourceSystem='MLS_MOCK', eventTime=1769725516379, payload=PropertyPayload{propertyId='property_3', price=80000.0, status='ACTIVE'}}
+VALID> PropertyEvent{eventId='8f51b2cb-5c56-448d-8b66-94f4d4638d24', eventType='LISTING_UPDATED', sourceSystem='MLS_MOCK', eventTime=1769725516026, payload=PropertyPayload{propertyId='property_0', price=50000.0, status='ACTIVE'}}
+VALID> PropertyEvent{eventId='7f9a4b63-db5f-4bd8-b55a-2e3ee3f14065', eventType='LISTING_UPDATED', sourceSystem='MLS_MOCK', eventTime=1769725516379, payload=PropertyPayload{propertyId='property_2', price=70000.0, status='ACTIVE'}}
+```
 
 ## 🐛 Troubleshooting
 

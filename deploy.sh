@@ -18,9 +18,12 @@ docker exec kafka /usr/bin/kafka-topics \
 # Build Flink job
 cd flink-consumer
 mvn clean package -U
-FLINK_JAR=target/property-flink-consumer-1.0-SNAPSHOT.jar
+FLINK_JAR=flink-consumer/target/property-flink-consumer-1.0-SNAPSHOT.jar
+
+sleep 5
 
 # Deploy Flink job
+docker exec -it flink-jobmanager mkdir -p /opt/flink/jobs/
 docker cp $FLINK_JAR flink-jobmanager:/opt/flink/jobs/
 docker exec -it flink-jobmanager flink run /opt/flink/jobs/property-flink-consumer-1.0-SNAPSHOT.jar
 
