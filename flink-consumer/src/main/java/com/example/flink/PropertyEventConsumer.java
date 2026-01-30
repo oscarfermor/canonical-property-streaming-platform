@@ -18,6 +18,23 @@ import java.io.InputStream;
 public class PropertyEventConsumer {
 
         public static void main(String[] args) throws Exception {
+                /*
+                 * Kafka message arrives
+                 * ↓
+                 * Deserialized as GenericRecord
+                 * ↓
+                 * rawStream emits it
+                 * ↓
+                 * map() converts it to PropertyEvent
+                 * ↓
+                 * process():
+                 * if valid → goes to validEvents
+                 * if invalid → goes to side output
+                 * ↓
+                 * print() writes to TaskManager logs
+                 * ↓
+                 * event is gone forever
+                 */
 
                 StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
@@ -40,18 +57,21 @@ public class PropertyEventConsumer {
                                                                                 "http://schema-registry:8081"))
                                 .build();
 
-                // 1️⃣ Read from Kafka
+                // Read from Kafka -> Every message coming from Kafka, one by one
                 DataStream<GenericRecord> rawStream = env.fromSource(
                                 source,
                                 WatermarkStrategy.noWatermarks(),
                                 "kafka-source");
 
-                // 2️⃣ Convert Avro → POJO
+                // Convert Avro -> POJO per incoming event
                 DataStream<PropertyEvent> eventStream = rawStream.map(new AvroToPropertyEventMapper());
 
-                // 3️⃣ Validate
+                // Validate
                 PropertyEventValidationFunction validator = new PropertyEventValidationFunction();
 
+                // zero, one or many events, has context, side outputs
+                // eventStream -> Validator -> validEvents || INVALID_EVENTS
+                // From the validator operator, give me everything it emitted to INVALID_EVENTS
                 SingleOutputStreamOperator<PropertyEvent> validEvents = eventStream.process(validator);
 
                 DataStream<String> invalidEvents = validEvents.getSideOutput(
