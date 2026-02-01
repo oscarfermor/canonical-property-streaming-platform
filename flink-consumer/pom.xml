@@ -101,15 +101,17 @@
 
         <!-- ===== HADOOP (required for catalog) ===== -->
         <dependency>
-        <groupId>org.apache.hadoop</groupId>
-        <artifactId>hadoop-common</artifactId>
-        <version>3.3.6</version>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>3.3.6</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-aws</artifactId>
             <version>3.3.6</version>
+            <scope>provided</scope>
         </dependency>
 
                 <!-- Flink Table API (required for RowData) -->

@@ -24,6 +24,19 @@ public class IcebergSinks {
 
                 Configuration hadoopConf = new Configuration();
 
+                // REQUIRED: S3A credentials
+                hadoopConf.set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem");
+                hadoopConf.set(
+                                "fs.s3a.aws.credentials.provider",
+                                "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider");
+                hadoopConf.set(
+                                "fs.s3a.access.key",
+                                System.getenv("AWS_ACCESS_KEY_ID"));
+                hadoopConf.set(
+                                "fs.s3a.secret.key",
+                                System.getenv("AWS_SECRET_ACCESS_KEY"));
+                hadoopConf.set("fs.s3a.endpoint", "s3.amazonaws.com");
+
                 CatalogLoader catalogLoader = CatalogLoader.hadoop(
                                 "hadoop",
                                 hadoopConf,
