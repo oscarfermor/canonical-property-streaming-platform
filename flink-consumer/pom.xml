@@ -43,7 +43,7 @@
             <version>${flink.connector.kafka.version}</version>
         </dependency>
 
-        <!-- CAMBIO 2: Agregamos Avro explícitamente (la causa del error rojo) -->
+        <!-- CAMBIO 2: Agregamos Avro -->
         <dependency>
             <groupId>org.apache.avro</groupId>
             <artifactId>avro</artifactId>
@@ -83,6 +83,49 @@
             <artifactId>flink-avro-confluent-registry</artifactId>
             <version>${flink.version}</version>
         </dependency>
+
+        <!-- ===== ICEBERG + FLINK ===== -->
+        <dependency>
+            <groupId>org.apache.iceberg</groupId>
+            <artifactId>iceberg-flink-runtime-1.18</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+
+
+        <!-- ===== ICEBERG AWS (S3) ===== -->
+        <dependency>
+            <groupId>org.apache.iceberg</groupId>
+            <artifactId>iceberg-aws</artifactId>
+            <version>1.5.2</version>
+        </dependency>
+
+        <!-- ===== HADOOP (required for catalog) ===== -->
+        <dependency>
+        <groupId>org.apache.hadoop</groupId>
+        <artifactId>hadoop-common</artifactId>
+        <version>3.3.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-aws</artifactId>
+            <version>3.3.6</version>
+        </dependency>
+
+                <!-- Flink Table API (required for RowData) -->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-table-api-java</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-table-runtime</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
+
     </dependencies>
 
     <repositories>

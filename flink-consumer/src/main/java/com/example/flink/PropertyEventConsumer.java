@@ -2,7 +2,10 @@ package com.example.flink;
 
 import com.example.flink.functions.AvroToPropertyEventMapper;
 import com.example.flink.functions.PropertyEventValidationFunction;
+import com.example.flink.mapper.PropertyEventToRowDataMapper;
 import com.example.flink.model.PropertyEvent;
+import com.example.flink.sink.IcebergSinks;
+
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
@@ -12,6 +15,7 @@ import org.apache.flink.formats.avro.registry.confluent.ConfluentRegistryAvroDes
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.table.data.RowData;
 
 import java.io.InputStream;
 
@@ -77,7 +81,15 @@ public class PropertyEventConsumer {
                 DataStream<String> invalidEvents = validEvents.getSideOutput(
                                 PropertyEventValidationFunction.INVALID_EVENTS);
 
-                validEvents.print("VALID");
+                // Transform POJO object to record for Iceberg
+                DataStream<RowData> icebergStream = validEvents.map(new PropertyEventToRowDataMapper());
+
+                IcebergSinks.sinkValidEvents(
+                                icebergStream,
+                                "s3a://canonical-property-streaming-platform/iceberg-warehouse",
+                                "db",
+                                "property_events_valid");
+
                 invalidEvents.print("INVALID");
 
                 env.execute("Property Events Consumer");
