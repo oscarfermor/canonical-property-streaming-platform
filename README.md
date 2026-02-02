@@ -42,6 +42,172 @@ Databricks Bronze Table
 - Maven 3.6+ (for building Flink jobs)
 - Python 3.8+ (for producer)
 - Databricks workspace with API token (optional, for final storage)
+
+## ✅ REQUIRED AWS RESOURCES (before running the Flink job)
+
+### 1️⃣ S3 bucket (MANDATORY)
+
+You **must create this first**:
+
+```
+canonical-property-streaming-platform
+```
+
+### 2️⃣ IAM user or role with S3 access (MANDATORY)
+
+Your Flink job (local Docker, EC2, EKS, etc.) must run with credentials that can:
+
+- `s3:ListBucket`
+- `s3:GetObject`
+- `s3:PutObject`
+- `s3:DeleteObject`
+
+Policy example:
+
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowListBucket",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<ACCOUNT_ID>:root"
+      },
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::canonical-property-streaming-platform"
+    },
+    {
+      "Sid": "AllowObjectAccess",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::<ACCOUNT_ID>:root"
+      },
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::canonical-property-streaming-platform/*"
+    }
+  ]
+}
+```
+
+### 3️⃣ Bucket Versioning
+
+🔶 **Recommended: ENABLE**
+
+Why (important for Iceberg):
+
+- Iceberg commits are metadata-driven
+- Versioning helps:
+    - Recover from accidental deletes
+    - Debug failed commits
+    - Safer experimentation
+
+Tradeoff:
+
+- Slightly higher storage cost
+
+✅ **Enable it** if this is not a throwaway project.
+
+### 4️⃣ Final recommended S3 bucket selections (TL;DR)
+
+| Setting | Value |
+| --- | --- |
+| Region | us-west-2 |
+| Bucket type | General purpose |
+| Object ownership | Bucket owner enforced |
+| Public access | Block all |
+| Versioning | **Enable** |
+| Encryption | SSE-S3 |
+| ACLs | Disabled |
+
+You are **100% safe** with this setup.
+
+### 5️⃣ AWS Glue Database — **YOU must create**
+
+Glue **does not auto-create databases**.
+
+You must create this manually:
+
+```
+Glue Database name: db
+Region: us-west-2
+```
+
+This maps to:
+
+```java
+TableIdentifier.of("db","property_events_valid")
+```
+
+📌 If this DB does not exist:
+
+```
+NoSuchDatabaseException
+```
+
+#### Required Glue Permissions
+
+```json
+{
+  "Effect": "Allow",
+  "Action": [
+    "glue:GetDatabase",
+    "glue:GetDatabases",
+    "glue:GetTable",
+    "glue:GetTables",
+    "glue:CreateTable",
+    "glue:UpdateTable"
+  ],
+  "Resource": "*"
+}
+```
+
+#### Step 1: Create the Database
+
+1. Go to the **AWS Console** → search for **Glue** → open it
+2. In the left sidebar, click **Databases**
+3. Click **Add database**
+4. Enter a name (e.g., `db`)
+5. Click **Create**
+
+#### Step 2: Create the Iceberg Table
+
+1. In the left sidebar, click **Tables**
+2. Click **Add table**
+3. Select the database you just created (`db`)
+4. Enter the table name: `property_events_valid`
+5. Choose **Data warehouse** as the data source type
+6. Set the **S3 location** to:
+
+   ```
+   s3://canonical-property-streaming-platform/iceberg-warehouse/db/property_events_valid
+   ```
+
+7. Define your columns:
+
+   | Name | Type |
+   | --- | --- |
+   | property_id | string |
+   | price | double |
+   | currency | string |
+   | event_time | timestamp |
+
+8. Under table type / format, select **Iceberg** (or set the table type to `ICEBERG` in the table parameters)
+9. Click **Create**
+
+### 6️⃣ Configure AWS credentials locally
+
+Export your AWS credentials before running the Flink job:
+
+```bash
+export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
+export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
+```
+
 ## ⚡ Quick Start
 
 ```bash
