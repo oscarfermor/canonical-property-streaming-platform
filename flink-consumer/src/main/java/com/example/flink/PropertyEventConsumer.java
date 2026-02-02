@@ -42,6 +42,11 @@ public class PropertyEventConsumer {
 
                 StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
+                env.enableCheckpointing(30_000);
+                env.getCheckpointConfig().setMinPauseBetweenCheckpoints(10_000);
+                env.getCheckpointConfig().setCheckpointTimeout(120_000);
+                env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
+
                 InputStream schemaStream = PropertyEventConsumer.class
                                 .getClassLoader()
                                 .getResourceAsStream(

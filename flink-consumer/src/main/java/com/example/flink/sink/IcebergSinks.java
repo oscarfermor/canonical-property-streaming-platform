@@ -19,28 +19,28 @@ public class IcebergSinks {
                         String namespace,
                         String tableName) {
 
+                // Glue catalog properties
                 Map<String, String> catalogProps = new HashMap<>();
                 catalogProps.put("warehouse", warehouse);
+                catalogProps.put("catalog-impl", "org.apache.iceberg.aws.glue.GlueCatalog");
+                catalogProps.put("io-impl", "org.apache.iceberg.aws.s3.S3FileIO");
 
+                // Hadoop conf (lightweight now)
                 Configuration hadoopConf = new Configuration();
-
-                // REQUIRED: S3A credentials
                 hadoopConf.set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem");
+
+                // Let AWS SDK resolve credentials:
+                // - IAM Role (ECS / EKS / EMR)
+                // - ~/.aws/credentials (local dev)
                 hadoopConf.set(
                                 "fs.s3a.aws.credentials.provider",
-                                "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider");
-                hadoopConf.set(
-                                "fs.s3a.access.key",
-                                System.getenv("AWS_ACCESS_KEY_ID"));
-                hadoopConf.set(
-                                "fs.s3a.secret.key",
-                                System.getenv("AWS_SECRET_ACCESS_KEY"));
-                hadoopConf.set("fs.s3a.endpoint", "s3.amazonaws.com");
+                                "com.amazonaws.auth.DefaultAWSCredentialsProviderChain");
 
-                CatalogLoader catalogLoader = CatalogLoader.hadoop(
-                                "hadoop",
+                CatalogLoader catalogLoader = CatalogLoader.custom(
+                                "glue",
+                                catalogProps,
                                 hadoopConf,
-                                catalogProps);
+                                "org.apache.iceberg.aws.glue.GlueCatalog");
 
                 TableIdentifier tableId = TableIdentifier.of(namespace, tableName);
 

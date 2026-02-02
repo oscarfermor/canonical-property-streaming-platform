@@ -1,4 +1,0 @@
-fs.s3a.impl: org.apache.hadoop.fs.s3a.S3AFileSystem
-fs.s3a.aws.credentials.provider: org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider
-fs.s3a.endpoint: s3.amazonaws.com
-fs.s3a.path.style.access: false

@@ -99,22 +99,8 @@
             <version>1.5.2</version>
         </dependency>
 
-        <!-- ===== HADOOP (required for catalog) ===== -->
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-common</artifactId>
-            <version>3.3.6</version>
-            <scope>provided</scope>
-        </dependency>
 
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-aws</artifactId>
-            <version>3.3.6</version>
-            <scope>provided</scope>
-        </dependency>
-
-                <!-- Flink Table API (required for RowData) -->
+        <!-- Flink Table API (required for RowData) -->
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-table-api-java</artifactId>
@@ -125,6 +111,33 @@
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-table-runtime</artifactId>
             <version>${flink.version}</version>
+        </dependency>
+
+        <!-- AWS support for Iceberg (Glue + S3 File IO) -->
+        <dependency>
+            <groupId>org.apache.iceberg</groupId>
+            <artifactId>iceberg-aws-bundle</artifactId>
+            <version>1.4.3</version>
+        </dependency>
+
+        <!-- AWS Java SDK v2 (Glue, S3) — Iceberg depends on AWS SDK v2 -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>bundle</artifactId>
+            <version>2.20.105</version>
+        </dependency>
+
+        <!-- (Optional but recommended) For logging / auth with AWS SDK v2 -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>apache-client</artifactId>
+            <version>2.20.105</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-common</artifactId>
+            <version>3.3.6</version>
         </dependency>
 
 
