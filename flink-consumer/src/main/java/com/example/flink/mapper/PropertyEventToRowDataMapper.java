@@ -8,6 +8,25 @@ import org.apache.flink.table.data.RowData;
 import org.apache.flink.table.data.StringData;
 import org.apache.flink.table.data.TimestampData;
 
+// Javadoc formatting
+/**
+ * Maps {@link PropertyEvent} objects into Flink {@link RowData} instances.
+ *
+ * <p>This mapper extracts relevant fields from the event payload and converts
+ * them into a {@link GenericRowData} structure suitable for Table/SQL APIs.</p>
+ *
+ * <p>The resulting row has the following schema:
+ * <ul>
+ *   <li>property_id (STRING)</li>
+ *   <li>price (DOUBLE)</li>
+ *   <li>currency (STRING)</li>
+ *   <li>event_time (TIMESTAMP)</li>
+ * </ul>
+ * </p>
+ *
+ * <p>Intended for use in Flink streaming pipelines where domain events
+ * must be transformed into tabular formats.</p>
+ */
 public class PropertyEventToRowDataMapper
         implements MapFunction<PropertyEvent, RowData> {
 
