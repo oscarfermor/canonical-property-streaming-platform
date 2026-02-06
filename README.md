@@ -4,7 +4,7 @@ A real estate event ingestion platform that generates property events and normal
 
 ## 📋 Table of Contents
 - [Project Overview](#-project-overview)
-- [Architecture](#-architecture)
+- [Architecture](#️-architecture)
 - [Prerequisites](#-prerequisites)
 - [Required AWS Resources](#-required-aws-resources-before-running-the-flink-job)
 - [Databricks Configuration](#-databricks-configuration-aws-glue-integration)
