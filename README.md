@@ -6,6 +6,9 @@ A real estate event ingestion platform that generates property events and normal
 - [Project Overview](#project-overview)
 - [Architecture](#architecture)
 - [Prerequisites](#prerequisites)
+- [Required AWS Resources](#required-aws-resources-before-running-the-flink-job)
+- [Databricks Configuration](#databricks-configuration-aws-glue-integration)
+- [Data in Databricks](#data-in-databricks-screenshots)
 - [Quick Start](#quick-start)
 - [Setup Instructions](#setup-instructions)
 - [Verification Steps](#verification-steps)
@@ -207,6 +210,89 @@ Export your AWS credentials before running the Flink job:
 export AWS_ACCESS_KEY_ID=$(aws configure get aws_access_key_id)
 export AWS_SECRET_ACCESS_KEY=$(aws configure get aws_secret_access_key)
 ```
+
+## 🔗 Databricks Configuration (AWS Glue Integration)
+
+### Prerequisites
+
+- **Databricks workspace** deployed in AWS (same region as your S3 bucket)
+- **Databricks personal access token** for API authentication
+- AWS Glue database and table created (steps above)
+
+### Step 1: Add AWS Glue as an External Location (Databricks)
+
+1. Go to **Databricks workspace** → **Catalog** (sidebar)
+2. Click **External Locations**
+3. Click **Create Location**
+4. Configure:
+   - **Location name**: `canonical-property-warehouse`
+   - **URL**: `s3://canonical-property-streaming-platform/iceberg-warehouse/`
+   - **Access credential**: Select your AWS credentials or create new
+5. Click **Create**
+
+### Step 2: Create a Schema/Database (Databricks)
+
+1. In **Catalog** section, click **Schemas**
+2. Click **Create Schema**
+3. Configure:
+   - **Schema name**: `db`
+   - **External location**: `canonical-property-warehouse` (from Step 1)
+   - **Owner**: Your user or service principal
+4. Click **Create**
+
+### Step 3: Link AWS Glue Catalog (Optional but Recommended)
+
+Databricks can directly sync with AWS Glue tables:
+
+1. Go to **Admin Console** → **Catalogs**
+2. Click **Create Catalog** → **AWS Glue**
+3. Configure:
+   - **Catalog name**: `glue_catalog`
+   - **Metastore**: AWS Glue
+   - **Region**: `us-west-2` (or your region)
+   - **IAM role**: Select role with Glue permissions
+4. Click **Create**
+
+Your Flink job writes Iceberg tables to S3 → AWS Glue tracks metadata → Databricks reads via Glue catalog.
+
+### Step 4: Query and Verify Data in Databricks
+
+```sql
+-- Query using Glue catalog
+SELECT * FROM glue_catalog.db.property_events_valid LIMIT 10;
+
+-- Or query directly if table is synced
+SELECT * FROM db.property_events_valid LIMIT 10;
+```
+
+Expected output:
+```
+property_id | price    | currency | event_time
+------------|----------|----------|----------------------
+property_1  | 150000.0 | USD      | 2026-02-02 22:35:10
+property_2  | 250000.0 | USD      | 2026-02-02 22:35:11
+property_3  | 350000.0 | USD      | 2026-02-02 22:35:12
+```
+
+---
+
+## 📊 Data in Databricks (Screenshots)
+
+Add your Databricks screenshots here to document the data flow:
+
+### Screenshot 1: Catalog View
+![Databricks Catalog - External Location](./docs/screenshots/databricks_catalog.png)
+
+### Screenshot 2: Query Results
+![Databricks Query Results - Property Events Table](./docs/screenshots/databricks_query_results.png)
+
+### Screenshot 3: Table Stats
+![Databricks Table Stats and Metadata](./docs/screenshots/databricks_table_stats.png)
+
+### Screenshot 4: Lineage View
+![Databricks Data Lineage - Flink to Iceberg to Glue](./docs/screenshots/databricks_lineage.png)
+
+---
 
 ## ⚡ Quick Start
 
