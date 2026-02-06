@@ -552,7 +552,4 @@ If containers are crashing, increase Docker memory allocation:
 - [Confluent Schema Registry](https://docs.confluent.io/schema-registry/)
 - [Databricks Documentation](https://docs.databricks.com/)
 
-## 📄 License
-
-TBD
 
