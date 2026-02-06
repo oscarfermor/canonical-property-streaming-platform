@@ -3,16 +3,16 @@
 A real estate event ingestion platform that generates property events and normalizes them with Apache Flink, and stores them in a Bronze table in Databricks for analytics.
 
 ## 📋 Table of Contents
-- [Project Overview](#project-overview)
-- [Architecture](#architecture)
-- [Prerequisites](#prerequisites)
-- [Required AWS Resources](#required-aws-resources-before-running-the-flink-job)
-- [Databricks Configuration](#databricks-configuration-aws-glue-integration)
-- [Data in Databricks](#data-in-databricks-screenshots)
-- [Quick Start](#quick-start)
-- [Setup Instructions](#setup-instructions)
-- [Verification Steps](#verification-steps)
-- [Troubleshooting](#troubleshooting)
+- [Project Overview](#-project-overview)
+- [Architecture](#-architecture)
+- [Prerequisites](#-prerequisites)
+- [Required AWS Resources](#-required-aws-resources-before-running-the-flink-job)
+- [Databricks Configuration](#-databricks-configuration-aws-glue-integration)
+- [Data in Databricks](#-data-in-databricks)
+- [Quick Start](#-quick-start)
+- [Setup Instructions](#-setup-instructions)
+- [Verification Steps](#-verification-steps)
+- [Troubleshooting](#-troubleshooting)
 
 ## 🚀 Project Overview
 
@@ -276,21 +276,8 @@ property_3  | 350000.0 | USD      | 2026-02-02 22:35:12
 
 ---
 
-## 📊 Data in Databricks (Screenshots)
+## 📊 Data in Databricks
 
-Add your Databricks screenshots here to document the data flow:
-
-### Screenshot 1: Catalog View
-![Databricks Catalog - External Location](./docs/screenshots/databricks_catalog.png)
-
-### Screenshot 2: Query Results
-![Databricks Query Results - Property Events Table](./docs/screenshots/databricks_query_results.png)
-
-### Screenshot 3: Table Stats
-![Databricks Table Stats and Metadata](./docs/screenshots/databricks_table_stats.png)
-
-### Screenshot 4: Lineage View
-![Databricks Data Lineage - Flink to Iceberg to Glue](./docs/screenshots/databricks_lineage.png)
 
 ---
 
