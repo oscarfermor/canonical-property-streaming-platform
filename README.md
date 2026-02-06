@@ -1,4 +1,4 @@
-# Canonical Property Event Stream update
+# Canonical Property Event Stream
 
 A real estate event ingestion platform that generates property events and normalizes them with Apache Flink, and stores them in a Bronze table in Databricks for analytics.
 
