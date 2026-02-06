@@ -277,7 +277,9 @@ property_3  | 350000.0 | USD      | 2026-02-02 22:35:12
 ---
 
 ## 📊 Data in Databricks
+<img width="1410" height="573" alt="Screenshot 2026-02-05 at 17 20 24" src="https://github.com/user-attachments/assets/20e2149e-d3f8-4678-9e90-9028540b72c1" />
 
+<img width="887" height="697" alt="Screenshot 2026-02-05 at 18 53 35" src="https://github.com/user-attachments/assets/6b00fd5e-125c-4083-b4e8-145fbd0115d4" />
 
 ---
 
