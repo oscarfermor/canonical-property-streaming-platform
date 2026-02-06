@@ -17,6 +17,8 @@ A real estate event ingestion platform that generates property events and normal
 ## 🚀 Project Overview
 
 The platform generates property events a single Kafka topic. Apache Flink validates and normalizes the data, applying quality flags, before appending records to a Databricks Bronze table with full metadata preserved.
+<img width="1754" height="1021" alt="canonical-schema" src="https://github.com/user-attachments/assets/df64d163-2b0f-487f-9a06-42d959edd270" />
+
 
 ### Key Components
 - **Kafka**: Event streaming platform for real-time data ingestion
