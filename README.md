@@ -491,6 +491,8 @@ VALID> PropertyEvent{eventId='a8752000-5373-447c-995e-bb57ab03e73c', eventType='
 VALID> PropertyEvent{eventId='8f51b2cb-5c56-448d-8b66-94f4d4638d24', eventType='LISTING_UPDATED', sourceSystem='MLS_MOCK', eventTime=1769725516026, payload=PropertyPayload{propertyId='property_0', price=50000.0, status='ACTIVE'}}
 VALID> PropertyEvent{eventId='7f9a4b63-db5f-4bd8-b55a-2e3ee3f14065', eventType='LISTING_UPDATED', sourceSystem='MLS_MOCK', eventTime=1769725516379, payload=PropertyPayload{propertyId='property_2', price=70000.0, status='ACTIVE'}}
 ```
+<img width="647" height="223" alt="Screenshot 2026-02-02 at 18 35 30" src="https://github.com/user-attachments/assets/f83afb0f-1d36-44d2-89f4-3baa309aae47" />
+
 
 ## 🐛 Troubleshooting
 
